@@ -1,11 +1,10 @@
+import { Routes, Route } from "react-router-dom";
 import { PurchasePage } from "./pages/PurchasePage/PurchasePage";
 
-function App() {
+export function App() {
   return (
-    <>
-      <PurchasePage />
-    </>
+    <Routes>
+      <Route path="/purchase" element={<PurchasePage />} />
+    </Routes>
   );
 }
-
-export default App;

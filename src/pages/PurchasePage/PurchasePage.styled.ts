@@ -4,6 +4,10 @@ export const Container = styled.div`
   width: 600px;
   height: 100vh;
   border: 2px solid black;
+
+  @media (max-width: 768px) {
+    width: 100vw;
+  }
 `;
 
 export const ProductPackSizesContainer = styled.div`
