@@ -1,11 +1,34 @@
+// src/hooks/useProducts.ts
 import { useEffect, useState } from "react";
-import type { Product } from "../types/Product";
+import { products as productsData } from "../data/products.json";
+import type { ProductWithQuantities } from "../types/ProductWithQuantities";
 
 export function useProducts() {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<ProductWithQuantities[]>([]);
 
   useEffect(() => {
-    setProducts(products);
+    // Inicializa os produtos com as quantidades zeradas
+    const initializedProducts = productsData.map((product) => ({
+      ...product,
+      currentQuantity: 0,
+      accumulatedQuantity: 0,
+    }));
+    setProducts(initializedProducts);
   }, []);
-  return products;
+
+  const updateProductQuantities = (
+    productId: number,
+    currentQuantity: number,
+    accumulatedQuantity: number
+  ) => {
+    setProducts((prevProducts) =>
+      prevProducts.map((product) =>
+        product.id === productId
+          ? { ...product, currentQuantity, accumulatedQuantity }
+          : product
+      )
+    );
+  };
+
+  return { products, updateProductQuantities };
 }

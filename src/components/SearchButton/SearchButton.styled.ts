@@ -17,7 +17,6 @@ export const SearchButtonModal = styled.button`
   border: none;
   cursor: pointer;
 `;
-
 export const SearchButtonContainer = styled.div`
   display: none;
   flex-direction: column;
@@ -74,7 +73,7 @@ export const InputRef = styled.input`
   width: 250px;
   height: 35px;
   border: none;
-  padding-left: 10px; 
+  padding-left: 10px;
 `;
 
 export const ButtonRef = styled.button`
@@ -85,5 +84,5 @@ export const ButtonRef = styled.button`
   border: none;
   cursor: pointer;
   font-weight: bold;
-  font-size: 15px
+  font-size: 15px;
 `;

@@ -43,3 +43,4 @@ export const ProductColor = styled.span`
 export const ProductPrice = styled.p`
   font-size: 18px;
 `;
+

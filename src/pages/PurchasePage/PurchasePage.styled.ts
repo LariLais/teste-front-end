@@ -57,3 +57,9 @@ export const PackWord = styled.p`
   color: white;
   top: 8px;
 `;
+
+export const ProductSizesList = styled.div`
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+`;

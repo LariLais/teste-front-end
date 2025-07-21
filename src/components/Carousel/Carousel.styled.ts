@@ -1,3 +1,4 @@
+// src/components/Carousel/Carousel.styled.ts
 import styled from "styled-components";
 
 export const CarouselContainer = styled.div`
@@ -66,18 +67,28 @@ export const BuyButton = styled.div`
   height: 2.7em;
   background-color: #809dab;
   background-image: url("../../src/assets/icons/add_shopping_cart.svg");
-  object-fit: cover;
   background-repeat: no-repeat;
   background-position: center;
   background-size: 60%;
-  color: white;
+  color: white; /* Cor do ícone, se for texto ou SVG */
   border-radius: 100%;
   border: none;
   cursor: pointer;
 `;
 
-export const MiniImagesCarousel = styled.img`
+// CORREÇÃO AQUI: Mudei de styled.img para styled.div
+export const MiniImagesCarousel = styled.div`
+  display: flex;
+  gap: 10px;
+`;
+
+export const MiniImage = styled.img`
   width: 50px;
   height: 50px;
+  object-fit: cover;
+  cursor: pointer;
   border: 1px solid #809dab;
+  &:hover {
+    border: 2px solid blue;
+  }
 `;
