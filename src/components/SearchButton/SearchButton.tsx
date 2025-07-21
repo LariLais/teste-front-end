@@ -1,13 +1,14 @@
-// src/components/SearchButton/SearchButton.tsx
-import { useState } from "react";
+import React, { useState } from "react";
 import {
-  ButtonRef,
-  CloseButton,
-  InputRef,
+  SearchButtonModal,
   SearchButtonContainer,
   SearchButtonHeader,
-  SearchButtonModal,
+  SearchButtonTitle,
+  CloseButton,
   SearchContainer,
+  InputRef,
+  ButtonRef,
+  ModalOverlay,
 } from "./SearchButton.styled";
 
 interface SearchButtonProps {
@@ -18,47 +19,63 @@ export const SearchButton = ({ onSearch }: SearchButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
 
-  const handleSearch = () => {
+  const handleOpenModal = () => setIsOpen(true);
+  const handleCloseModal = () => setIsOpen(false);
+
+  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      handleCloseModal();
+    }
+  };
+
+  const handleSearchClick = () => {
     onSearch(searchValue);
-    setIsOpen(false);
-    setSearchValue(""); // Limpa o input após a busca
+    setSearchValue("");
+    handleCloseModal();
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSearchClick();
+    }
   };
 
   return (
     <>
       <SearchButtonModal
-        onClick={() => setIsOpen(true)}
-        aria-label="Buscar produto por referência"
-      ></SearchButtonModal>
+        onClick={handleOpenModal}
+        aria-label="Abrir busca de produto"
+      />
 
       {isOpen && (
-        <SearchButtonContainer>
-          <SearchButtonHeader>
-            BUSCAR POR REF
-            <CloseButton
-              onClick={() => setIsOpen(false)}
-              aria-label="Fechar busca"
-            >
-              X
-            </CloseButton>
-          </SearchButtonHeader>
-          <SearchContainer>
-            <InputRef
-              type="text"
-              placeholder="Digite a referência"
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-              onKeyPress={(e) => {
-                if (e.key === "Enter") {
-                  handleSearch();
-                }
-              }}
-            />
-            <ButtonRef onClick={handleSearch} aria-label="Buscar">
-              Buscar
-            </ButtonRef>
-          </SearchContainer>
-        </SearchButtonContainer>
+        <ModalOverlay onClick={handleOverlayClick}>
+          {" "}
+          <SearchButtonContainer>
+            <SearchButtonHeader>
+              <SearchButtonTitle>Buscar Produto</SearchButtonTitle>
+              <CloseButton
+                onClick={handleCloseModal}
+                aria-label="Fechar modal de busca"
+              >
+                &times;
+              </CloseButton>
+            </SearchButtonHeader>
+            <SearchContainer>
+              <InputRef
+                type="text"
+                value={searchValue}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyDown}
+                placeholder="00.00.000"
+              />
+              <ButtonRef onClick={handleSearchClick}>Buscar</ButtonRef>
+            </SearchContainer>
+          </SearchButtonContainer>
+        </ModalOverlay>
       )}
     </>
   );

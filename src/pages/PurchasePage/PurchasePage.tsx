@@ -12,7 +12,7 @@ import {
   ProductSize,
   ProductSizeContainer,
   ProductSizeQuantity,
-  ProductSizesList, // Importar do styled component
+  ProductSizesList,
 } from "./PurchasePage.styled";
 import { useProducts } from "../../hooks/useProducts";
 
@@ -20,28 +20,23 @@ export function PurchasePage() {
   const { products, updateProductQuantities } = useProducts();
   const [currentProductIndex, setCurrentProductIndex] = useState(0);
 
-  // Categorias únicas e produtos por categoria
   const categories = useMemo(() => {
     return [...new Set(products.map((p) => p.categories))];
   }, [products]);
 
   const [categoryIndex, setCategoryIndex] = useState(0);
 
-  // Filtra produtos pela categoria atual
   const productsInCurrentCategory = useMemo(() => {
     const category = categories[categoryIndex];
     return products.filter((p) => p.categories === category);
   }, [products, categories, categoryIndex]);
 
-  // Redefine o índice do produto quando a categoria muda
   useEffect(() => {
     setCurrentProductIndex(0);
   }, [categoryIndex]);
 
-  // Produto atualmente exibido
   const currentProduct = productsInCurrentCategory[currentProductIndex] || null;
 
-  // Funções de navegação de categoria
   const handlePrevCategory = () => {
     setCategoryIndex((prev) => (prev === 0 ? categories.length - 1 : prev - 1));
   };
@@ -49,7 +44,6 @@ export function PurchasePage() {
     setCategoryIndex((prev) => (prev === categories.length - 1 ? 0 : prev + 1));
   };
 
-  // Funções de navegação de produto (carrossel)
   const handlePrevProduct = () => {
     setCurrentProductIndex((prev) =>
       prev === 0 ? productsInCurrentCategory.length - 1 : prev - 1
@@ -61,7 +55,6 @@ export function PurchasePage() {
     );
   };
 
-  // Função de busca por referência
   const handleSearchProduct = (reference: string) => {
     const foundProductIndex = productsInCurrentCategory.findIndex(
       (p) => p.reference.toLowerCase() === reference.toLowerCase()
@@ -94,7 +87,6 @@ export function PurchasePage() {
           <ProductInfo product={currentProduct} />
 
           <ProductPackSizesContainer>
-            {/* Exibir tamanhos disponíveis e quantidade por tamanho */}
             <ProductSizesList>
               {currentProduct.skus.map((sku) => (
                 <ProductSizeContainer key={sku.id}>
@@ -108,7 +100,6 @@ export function PurchasePage() {
 
             <ProductSizeContainer>
               <PackWord>PACK</PackWord>
-              {/* Você pode exibir a quantidade mínima ou múltipla aqui se desejar */}
               <ProductSizeQuantity>
                 {currentProduct.skus[0]?.multipleQuantity || 0}
               </ProductSizeQuantity>

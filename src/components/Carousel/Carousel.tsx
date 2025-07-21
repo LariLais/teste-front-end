@@ -1,11 +1,10 @@
-// src/components/Carousel/Carousel.tsx
 import { InfoModal } from "../InfoModal/InfoModal";
 import { SearchButton } from "../SearchButton/SearchButton";
 import {
   BuyButton,
   CarouselContainer,
   CarouselInfoContainer,
-  ClothesImages, // Seu styled component
+  ClothesImages,
   ColoredPaginationButtonLeft,
   ColoredPaginationButtonRight,
   MiniImage,
@@ -13,8 +12,8 @@ import {
 } from "./Carousel.styled";
 import type { Product } from "../../types/Product";
 import { useState } from "react";
-// Importa a imagem de fallback
-import ImageUndefined from "../../assets/images/image_undefined.png"; // <--- ADICIONE ESTA LINHA
+
+import ImageUndefined from "../../assets/images/image_undefined.png";
 
 interface CarouselProps {
   product: Product | null;
@@ -39,13 +38,12 @@ export const Carousel = ({
     setCurrentImageIndex(index);
   };
 
-  // Função para lidar com erros de carregamento de imagem
   const handleImageError = (
     e: React.SyntheticEvent<HTMLImageElement, Event>
   ) => {
     const target = e.target as HTMLImageElement;
-    target.src = ImageUndefined; // Define a imagem de fallback
-    target.onerror = null; // Evita loop infinito se a imagem de fallback também falhar
+    target.src = ImageUndefined;
+    target.onerror = null;
   };
 
   return (
@@ -80,7 +78,7 @@ export const Carousel = ({
               alt={`${product.name} thumbnail ${index + 1}`}
               onClick={() => handleThumbnailClick(index)}
               style={{
-                border: index === currentImageIndex ? "2px solid blue" : "none",
+                border: index === currentImageIndex ? "2px solid gray" : "none",
               }}
               onError={handleImageError}
             />

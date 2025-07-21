@@ -17,15 +17,18 @@ export const SearchButtonModal = styled.button`
   border: none;
   cursor: pointer;
 `;
+
 export const SearchButtonContainer = styled.div`
-  display: none;
   flex-direction: column;
   width: 400px;
-  position: absolute;
-  top: 20%;
-  left: 38%;
-  transform: translate(-20%, -20%);
-  border-radius: 5px 5px 0 0;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1001;
+  position: fixed;
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 `;
 
 export const SearchButtonHeader = styled.div`
@@ -51,13 +54,13 @@ export const CloseButton = styled.button`
   background-color: transparent;
   border: none;
   color: white;
-  font-size: 20px;
+  font-size: 30px;
   right: 0.3em;
   top: 0.3em;
   cursor: pointer;
 `;
 
-export const SearchContainer = styled.p`
+export const SearchContainer = styled.div`
   font-weight: bold;
   display: flex;
   flex-direction: column;
@@ -65,6 +68,8 @@ export const SearchContainer = styled.p`
   gap: 20px;
   justify-content: center;
   align-items: center;
+  background-color: white;
+  border-radius: 0 0 5px 5px;
 `;
 
 export const InputRef = styled.input`
@@ -85,4 +90,17 @@ export const ButtonRef = styled.button`
   cursor: pointer;
   font-weight: bold;
   font-size: 15px;
+`;
+
+export const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;

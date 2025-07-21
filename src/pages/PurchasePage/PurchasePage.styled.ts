@@ -30,6 +30,9 @@ export const ProductSizeQuantity = styled.p`
   background-color: white;
   border-radius: 10px;
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const ProductSize = styled.p`
@@ -43,7 +46,7 @@ export const ProductSize = styled.p`
   border: 1px solid white;
   border-radius: 100%;
   position: absolute;
-  top: 3px;
+  top: 1.8px;
 `;
 
 export const EqualSimbol = styled.p`

@@ -1,4 +1,3 @@
-// src/components/Header/Header.tsx
 import {
   BackButtonHeader,
   CategoryDiv,
@@ -9,7 +8,7 @@ import {
 
 interface HeaderProps {
   category: string;
-  categoryIndex?: number; // novo, opcional
+  categoryIndex?: number;
   onPrevCategory: () => void;
   onNextCategory: () => void;
 }
@@ -34,7 +33,6 @@ export const Header = ({
           &gt;
         </WhiteButton>
       </CategoryDiv>
-      {/* Botão de funções - sem funcionalidade */}
       <WhiteButton aria-label="Botão F">F</WhiteButton>
     </HeaderContainer>
   );

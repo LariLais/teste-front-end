@@ -33,6 +33,9 @@ export const ProductName = styled.h3`
 
 export const ProductRef = styled.h3`
   text-transform: uppercase;
+  display: flex;
+  gap: 5px;
+  font-weight: 500;
 `;
 
 export const ProductColor = styled.span`
@@ -42,5 +45,5 @@ export const ProductColor = styled.span`
 
 export const ProductPrice = styled.p`
   font-size: 18px;
+  font-weight: 500;
 `;
-

@@ -8,8 +8,8 @@ export const ProductValueContainer = styled.div`
   min-height:100%
   max-height: 100%;
   background-color: white;
-  padding: 15px;
   gap:20px;
+  padding-top: 5px;
 `;
 
 export const ProductValues = styled.div`
@@ -43,6 +43,7 @@ export const SelectorButton = styled.button`
   font-size: 40px;
   border: none;
   border-radius: 100%;
+  cursor: pointer;
 `;
 
 export const ValueSelector = styled.p`

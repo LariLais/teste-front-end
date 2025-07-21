@@ -27,58 +27,92 @@ export const ProductValue = ({
   const [currentQuantity, setCurrentQuantity] = useState(0);
   const [accumulatedQuantity, setAccumulatedQuantity] = useState(0);
 
+  const selectedSku = product?.skus[0] || {
+    id: "",
+    size: "",
+    stock: 0,
+    price: "0",
+    minQuantity: 1,
+    multipleQuantity: 1,
+  };
+
+  const { minQuantity, multipleQuantity, stock } = selectedSku;
+
   useEffect(() => {
     if (product) {
       setCurrentQuantity(product.currentQuantity);
       setAccumulatedQuantity(product.accumulatedQuantity);
     } else {
-      // Reseta as quantidades se nenhum produto estiver selecionado
       setCurrentQuantity(0);
       setAccumulatedQuantity(0);
     }
   }, [product]);
 
   const handleQuantityChange = (delta: number) => {
-    if (!product || product.skus.length === 0) return;
-
-    // Pegamos o primeiro SKU para aplicar as regras de min/multiple quantity
-    // Você pode ajustar isso se tiver uma forma de selecionar um SKU específico
-    const selectedSku = product.skus[0];
-    const { minQuantity, multipleQuantity, stock } = selectedSku;
-
-    let newCurrentQuantity = currentQuantity + delta;
-
-    // --- LÓGICA DE minQuantity e multipleQuantity ---
-
-    // 1. Aplicar a regra de multipleQuantity na adição
-    if (delta > 0) { // Se estiver adicionando
-        // Garante que a quantidade adicionada é um múltiplo
-        // Se a quantidade atual + delta não for um múltiplo, ajusta para o próximo múltiplo válido
-        const nextMultiple = Math.ceil(newCurrentQuantity / multipleQuantity) * multipleQuantity;
-        newCurrentQuantity = Math.max(newCurrentQuantity, nextMultiple);
-
-    } else if (delta < 0) { // Se estiver subtraindo
-        // Garante que a quantidade removida ainda respeite os múltiplos
-        const previousMultiple = Math.floor(newCurrentQuantity / multipleQuantity) * multipleQuantity;
-        newCurrentQuantity = Math.min(newCurrentQuantity, previousMultiple);
+    if (!product || product.skus.length === 0) {
+      return;
     }
 
-    // 2. Garantir a quantidade mínima
-    newCurrentQuantity = Math.max(newCurrentQuantity, minQuantity);
+    let newCalculatedQuantity = currentQuantity + delta;
 
-    // 3. Garantir que não excede o estoque disponível
-    newCurrentQuantity = Math.min(newCurrentQuantity, stock);
+    // --- LÓGICA REVISADA PARA IR ATÉ 0 ---
 
-    // --- FIM DA LÓGICA ---
+    // 1. Caso especial: Se estou em 'minQuantity' (e minQuantity > 0) e clico para diminuir,
+    // devo ir para 0 diretamente.
+    if (delta < 0 && currentQuantity === minQuantity && minQuantity > 0) {
+      newCalculatedQuantity = 0;
+    }
+    // 2. Caso especial: Se estou em 0 e clico para aumentar,
+    // devo ir para 'minQuantity' (se minQuantity > 0) ou 'multipleQuantity' (se minQuantity é 0 ou 1).
+    else if (delta > 0 && currentQuantity === 0) {
+      newCalculatedQuantity = minQuantity > 0 ? minQuantity : multipleQuantity;
+    }
+    // 3. Casos Gerais: Aplica a lógica de múltiplos e garante que não seja negativo
+    else {
+      // Garante que não seja negativo antes de aplicar múltiplos
+      newCalculatedQuantity = Math.max(0, newCalculatedQuantity);
 
-    // Atualiza as quantidades
-    if (newCurrentQuantity !== currentQuantity) {
-      const newAccumulatedQuantity = accumulatedQuantity + (newCurrentQuantity - currentQuantity); // Adiciona apenas a diferença efetiva
-      setCurrentQuantity(newCurrentQuantity);
+      if (delta > 0) {
+        // Aumentando
+        // Arredonda para o próximo múltiplo se necessário
+        if (newCalculatedQuantity % multipleQuantity !== 0) {
+          newCalculatedQuantity =
+            Math.ceil(newCalculatedQuantity / multipleQuantity) *
+            multipleQuantity;
+        }
+      } else if (delta < 0) {
+        // Diminuindo
+        // Arredonda para o múltiplo anterior se necessário
+        if (newCalculatedQuantity % multipleQuantity !== 0) {
+          newCalculatedQuantity =
+            Math.floor(newCalculatedQuantity / multipleQuantity) *
+            multipleQuantity;
+        }
+        // Garante que não caia abaixo de minQuantity (a menos que já seja 0)
+        if (newCalculatedQuantity > 0 && newCalculatedQuantity < minQuantity) {
+          newCalculatedQuantity = minQuantity;
+        }
+      }
+    }
+
+    // 4. Garante que a quantidade não excede o estoque disponível
+    newCalculatedQuantity = Math.min(newCalculatedQuantity, stock);
+
+    // 5. Se o estoque for 0, a quantidade final também deve ser 0
+    if (stock === 0) {
+      newCalculatedQuantity = 0;
+    }
+
+    // --- FIM DA LÓGICA REVISADA ---
+
+    if (newCalculatedQuantity !== currentQuantity) {
+      const newAccumulatedQuantity =
+        accumulatedQuantity + (newCalculatedQuantity - currentQuantity);
+      setCurrentQuantity(newCalculatedQuantity);
       setAccumulatedQuantity(newAccumulatedQuantity);
       updateProductQuantities(
         product.id,
-        newCurrentQuantity,
+        newCalculatedQuantity,
         newAccumulatedQuantity
       );
     }
@@ -88,12 +122,9 @@ export const ProductValue = ({
     return null;
   }
 
-  // Preço do primeiro SKU para cálculo do valor total
-  const pricePerUnit = parseFloat(product.skus[0]?.price || "0");
+  const pricePerUnit = parseFloat(selectedSku.price || "0");
   const currentTotalValue = (currentQuantity * pricePerUnit).toFixed(2);
-  const accumulatedTotalValue = (accumulatedQuantity * pricePerUnit).toFixed(
-    2
-  );
+  const accumulatedTotalValue = (accumulatedQuantity * pricePerUnit).toFixed(2);
 
   return (
     <ProductValueContainer>
@@ -103,14 +134,19 @@ export const ProductValue = ({
       </ProductValues>
       <QuantitySelectorContainer>
         <SelectorButton
-          onClick={() => handleQuantityChange(-1)} // Clicar -1 tenta diminuir uma unidade
+          onClick={() => handleQuantityChange(-multipleQuantity)}
+          // Desabilita o botão '-' quando a quantidade atual é 0.
+          // Ou quando está em 'minQuantity' e minQuantity > 0.
+          disabled={currentQuantity === 0}
           aria-label="Diminuir quantidade"
         >
           &minus;
         </SelectorButton>
         <ValueSelector>{currentQuantity}</ValueSelector>
         <SelectorButton
-          onClick={() => handleQuantityChange(1)} // Clicar +1 tenta aumentar uma unidade
+          onClick={() => handleQuantityChange(multipleQuantity)}
+          // Desabilita o botão '+' se a quantidade já atingiu o estoque disponível
+          disabled={currentQuantity >= stock}
           aria-label="Aumentar quantidade"
         >
           +

@@ -15,14 +15,17 @@ export const InfoModalButton = styled.button`
 `;
 
 export const InfoModalContainer = styled.div`
-  display: none;
+  display: flex;
   flex-direction: column;
   width: 400px;
-  position: absolute;
-  top: 20%;
-  left: 38%;
-  transform: translate(-20%, -20%);
-  border-radius: 5px 5px 0 0;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1001;
+  position: fixed;
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 `;
 
 export const InfoModalHeader = styled.div`
@@ -46,16 +49,31 @@ export const CloseButton = styled.button`
   background-color: transparent;
   border: none;
   color: white;
-  font-size: 20px;
+  font-size: 30px;
   right: 0.3em;
   top: 0.3em;
   cursor: pointer;
 `;
 
-export const InfosContainer = styled.p`
-  font-weight: bold;
+export const InfosContainer = styled.div`
+  font-weight: 500;
   display: flex;
   flex-direction: column;
   padding: 20px;
   gap: 20px;
+  background-color: white;
+  border-radius: 0 0 5px 5px;
+`;
+
+export const ModalOverlay = styled.div`
+  position: fixed; /* Fixa na tela */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
